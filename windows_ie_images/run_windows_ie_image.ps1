@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory=$true)]
-    [String]$os
+    [String]$os,
+    [Switch]$NoChoco
     )
 
 $packages = @("vagrant", "virtualbox", "7zip")
@@ -65,8 +66,12 @@ function addBox($os, $path){
     }
 }
 
-checkExecPolicy
-installChoco
-installPackages $packages
+if($NoChoco -eq $false){
+    Write-Host "Getting Chocolatey..." -f yellow
+    checkExecPolicy
+    installChoco
+    installPackages $packages
+}
+
 $path = unzipBox (getVm $os)
 addBox $os $path
